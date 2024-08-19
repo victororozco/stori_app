@@ -61,3 +61,14 @@ flutter test
 ## API Integration
 
 The app uses a RESTful API for contact management. The base URL for the API can be configured by setting the `BASE_URL` environment variable. If not set, it defaults to `http://localhost:8000/api`.
+
+## Screenshots
+### Home
+![Home](./docs/images/Simulator-home.png)
+
+### Add new Contact
+![Add new contact](./docs/images/Simulator-add.png)
+![Add new contact validations](./docs/images/Simulator-add-validation.png)
+
+### Edit
+![Add new contact](./docs/images/Simulator-edit.png)
