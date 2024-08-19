@@ -14,7 +14,7 @@ class ContactApiService {
       return contactsJson.map((c) => Contact.fromJson(c)).toList();
     } else {
       final errorResponse = jsonDecode(response.body);
-      throw Exception(errorResponse['detail']);
+      throw Exception(errorResponse['detail']?[0]?['msg'] ?? errorResponse['detail']);
     }
   }
 
@@ -24,7 +24,7 @@ class ContactApiService {
       return Contact.fromJson(jsonDecode(response.body));
     } else {
       final errorResponse = jsonDecode(response.body);
-      throw Exception(errorResponse['detail']);
+      throw Exception(errorResponse['detail']?[0]?['msg'] ?? errorResponse['detail']);
     }
   }
 
@@ -40,7 +40,7 @@ class ContactApiService {
       return Contact.fromJson(jsonDecode(response.body));
     } else {
       final errorResponse = jsonDecode(response.body);
-      throw Exception(errorResponse['detail']);
+      throw Exception(errorResponse['detail']?[0]?['msg'] ?? errorResponse['detail']);
     }
   }
 
@@ -56,7 +56,7 @@ class ContactApiService {
       return Contact.fromJson(jsonDecode(response.body));
     } else {
       final errorResponse = jsonDecode(response.body);
-      throw Exception(errorResponse['detail']);
+      throw Exception(errorResponse['detail']?[0]?['msg'] ?? errorResponse['detail']);
     }
   }
 
@@ -64,7 +64,7 @@ class ContactApiService {
     final response = await http.delete(Uri.parse('$baseUrl/v1/contacts/$id'));
     if (response.statusCode != 200) {
       final errorResponse = jsonDecode(response.body);
-      throw Exception(errorResponse['detail']);
+      throw Exception(errorResponse['detail']?[0]?['msg'] ?? errorResponse['detail']);
     }
   }
 }

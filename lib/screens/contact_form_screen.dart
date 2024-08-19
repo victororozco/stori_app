@@ -58,6 +58,12 @@ class ContactFormScreenState extends State<ContactFormScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a name';
                   }
+                  if (value.trim().isEmpty) {
+                    return 'Name must not be empty or just whitespace';
+                  }
+                  if (value.length > 100) {
+                    return 'Name must be at most 100 characters long';
+                  }
                   return null;
                 },
               ),
@@ -66,12 +72,16 @@ class ContactFormScreenState extends State<ContactFormScreen> {
                 controller: _phoneController,
                 decoration: const InputDecoration(
                   labelText: 'Phone Number',
-                  labelStyle: TextStyle(color:  defaultColor),
+                  labelStyle: TextStyle(color: defaultColor),
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a phone number';
+                  }
+                  final phoneRegex = RegExp(r'^\+\d{9,15}$');
+                  if (!phoneRegex.hasMatch(value)) {
+                    return 'Please enter a valid phone number: +1234567890';
                   }
                   return null;
                 },
@@ -88,8 +98,9 @@ class ContactFormScreenState extends State<ContactFormScreen> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter an email';
                   }
-                  if (!value.contains('@')) {
-                    return 'Please enter a valid email';
+                  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                  if (!emailRegex.hasMatch(value)) {
+                    return 'Please enter a valid email address';
                   }
                   return null;
                 },
@@ -103,8 +114,8 @@ class ContactFormScreenState extends State<ContactFormScreen> {
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an address';
+                  if (value != null && value.length > 255) {
+                    return 'Address must be at most 255 characters long';
                   }
                   return null;
                 },
@@ -121,7 +132,6 @@ class ContactFormScreenState extends State<ContactFormScreen> {
                     vertical: 12,
                   ),
                   backgroundColor: defaultColor,
-
                 ),
                 child: const Text(
                   'Save',

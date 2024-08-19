@@ -24,7 +24,7 @@ void main() {
 
     // Test to verify that the form is populated with contact data for editing
     testWidgets('should display form with contact data for editing', (WidgetTester tester) async {
-      final contact = Contact(id: 1, name: 'John Doe', phone: '1234567890', email: 'john@mail.com', address: '123 Main St');
+      final contact = Contact(id: 1, name: 'John Doe', phone: '+1234567890', email: 'john@mail.com', address: '123 Main St');
       
       await tester.pumpWidget(MaterialApp(
         home: ContactFormScreen(contact: contact),
@@ -33,7 +33,7 @@ void main() {
       // Check if the form elements are populated with the contact data
       expect(find.text('Edit Contact'), findsOneWidget);
       expect(find.widgetWithText(TextFormField, 'John Doe'), findsOneWidget);
-      expect(find.widgetWithText(TextFormField, '1234567890'), findsOneWidget);
+      expect(find.widgetWithText(TextFormField, '+1234567890'), findsOneWidget);
       expect(find.widgetWithText(TextFormField, 'john@mail.com'), findsOneWidget);
       expect(find.widgetWithText(TextFormField, '123 Main St'), findsOneWidget);
     });
@@ -52,7 +52,7 @@ void main() {
       expect(find.text('Please enter a name'), findsOneWidget);
       expect(find.text('Please enter a phone number'), findsOneWidget);
       expect(find.text('Please enter an email'), findsOneWidget);
-      expect(find.text('Please enter an address'), findsOneWidget);
+      expect(find.text('Please enter an address'), findsNothing); // Address is optional
     });
 
     // Test to verify that a new contact is saved when the form is valid
@@ -63,7 +63,7 @@ void main() {
 
       // Enter valid data into the form fields
       await tester.enterText(find.byType(TextFormField).at(0), 'Jane Doe');
-      await tester.enterText(find.byType(TextFormField).at(1), '9876543210');
+      await tester.enterText(find.byType(TextFormField).at(1), '+9876543210');
       await tester.enterText(find.byType(TextFormField).at(2), 'jane@mail.com');
       await tester.enterText(find.byType(TextFormField).at(3), '123 Main St');
       
@@ -77,7 +77,7 @@ void main() {
 
     // Test to verify that an existing contact is updated when the form is valid
     testWidgets('should update existing contact when form is valid', (WidgetTester tester) async {
-      final contact = Contact(id: 1, name: 'John Doe', phone: '1234567890', email: 'john@mail.com', address: '123 Main St');
+      final contact = Contact(id: 1, name: 'John Doe', phone: '+1234567890', email: 'john@mail.com', address: '123 Main St');
       
       await tester.pumpWidget(MaterialApp(
         home: ContactFormScreen(contact: contact),
@@ -85,7 +85,7 @@ void main() {
 
       // Enter new data into the form fields
       await tester.enterText(find.byType(TextFormField).at(0), 'John Smith');
-      await tester.enterText(find.byType(TextFormField).at(1), '9876543210');
+      await tester.enterText(find.byType(TextFormField).at(1), '+9876543210');
       await tester.enterText(find.byType(TextFormField).at(2), 'john@mail.com');
       await tester.enterText(find.byType(TextFormField).at(3), '456 Elm St');
       
@@ -111,7 +111,24 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check if the error message is displayed
-      expect(find.text('Please enter a valid email'), findsOneWidget);
+      expect(find.text('Please enter a valid email address'), findsOneWidget);
+    });
+
+    // Test to verify that invalid phone number shows error message
+    testWidgets('should show error message for invalid phone number', (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(
+        home: ContactFormScreen(),
+      ));
+
+      // Enter invalid phone number into the form field
+      await tester.enterText(find.byType(TextFormField).at(1), '12345');
+      
+      // Simulate tapping the Save button
+      await tester.tap(find.text('Save'));
+      await tester.pumpAndSettle();
+
+      // Check if the error message is displayed
+      expect(find.text('Please enter a valid phone number: +1234567890'), findsOneWidget);
     });
   });
 }
